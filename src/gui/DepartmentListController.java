@@ -45,9 +45,10 @@ public class DepartmentListController implements Initializable {
 	private ObservableList<Department> obsList;
 	
 	@FXML
-	public void onBtNewAction(ActionEvent event) {
+	public void onBtNewAction(ActionEvent event) { //botão para cadastrar um novo departamento
 		Stage parentStage = Utils.currentStage(event);
-		createDialogForm("/gui/DepartmentForm.fxml", parentStage);
+		Department obj = new Department();
+		createDialogForm(obj, "/gui/DepartmentForm.fxml", parentStage);
 	}
 	
 	public void setDepartmentService(DepartmentService service) {
@@ -77,11 +78,15 @@ public class DepartmentListController implements Initializable {
 	}
 	
 	//função para carregar a janela do formulario para preencher um novo departamento
-	private void createDialogForm(String absoluteName, Stage parentSatge) { 
+	private void createDialogForm(Department obj, String absoluteName, Stage parentSatge) { 
 		//instanciando a janelinha de dialogo
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
+			
+			DepartmentFormController controller = loader.getController();
+			controller.setDepartment(obj);
+			controller.updateFormData(); //vai carregar os dados do obj acima no formulário
 			
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Enter Department data");
