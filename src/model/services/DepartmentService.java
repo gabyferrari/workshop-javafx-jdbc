@@ -14,4 +14,13 @@ public class DepartmentService {
 	public List<Department> findAll() {
 		return dao.findAll(); //vai no banco e busca os departamentos para a gente
 	}
+	
+	public void saveOrUpdate(Department obj) { //ver se tem q inserir um novo departament no banco ou atualizar um ja existente
+		if (obj.getId() == null) {
+			dao.insert(obj);
+		}
+		else {
+			dao.update(obj);
+		}
+	}
 }

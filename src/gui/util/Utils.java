@@ -11,4 +11,12 @@ public class Utils {
 		return (Stage) ((Node) event.getSource()).getScene().getWindow();//implementação padrão para pegar o stage a partir do obj de evento(o event acima)
 	}
 
+	public static Integer tryParseToInt(String str) {
+		try {
+			return Integer.parseInt(str);
+		}
+		catch (NumberFormatException e) {
+			return null;
+		}
+	}
 }
