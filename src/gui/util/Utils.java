@@ -23,9 +23,17 @@ public class Utils {
 																			// partir do obj de evento(o event acima)
 	}
 
-	public static Integer tryParseToInt(String str) {
-		try {
+	public static Integer tryParseToInt(String str) { //ele pega o valor em string e tenta converter para inteiro,
+		try {                                        //se der certo ele pega o inteiro, se nao, retorna nulo
 			return Integer.parseInt(str);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+	
+	public static Double tryParseToDouble(String str) {
+		try {
+			return Double.parseDouble(str);
 		} catch (NumberFormatException e) {
 			return null;
 		}

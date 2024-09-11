@@ -1,9 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -123,19 +125,40 @@ public class SellerFormController implements Initializable {
 		}
 	}
 
-	private Seller getFormData() {
+	private Seller getFormData() { //pega os dados que foram preenchidos no formulario e carrega um obj com esses dados
 		Seller obj = new Seller();
 
 		ValidationException exception = new ValidationException("Validation error");
 
-		obj.setId(Utils.tryParseToInt(txtId.getText()));
+		obj.setId(Utils.tryParseToInt(txtId.getText())); //jogando o conteudo da caixinha do id para o campo id do meu obj
 
-		if (txtName.getText() == null || txtName.getText().trim().equals("")) {
+		if (txtName.getText() == null || txtName.getText().trim().equals("")) { //testanto se é igual a nulo ou string vazio e gerando uma excessao caso tenha algum erro
 			exception.addError("name", "Field can´t be empty");
 		}
 		obj.setName(txtName.getText());
+		
+		if (txtEmail.getText() == null || txtEmail.getText().trim().equals("")) {  
+			exception.addError("email", "Field can´t be empty");
+		}
+		obj.setEmail(txtEmail.getText());
+		
+		
+		if (dpBirthDate.getValue() == null) {
+			exception.addError("birthDate", "Field can´t be empty");
+		}
+		else {
+			Instant instant = Instant.from(dpBirthDate.getValue().atStartOfDay(ZoneId.systemDefault())); //para pegar o valor q esta no DatePicker
+			obj.setBirthDate(Date.from(instant)); //para converter um instant para um Date
+		}
+		
+		if (txtBaseSalary.getText() == null || txtBaseSalary.getText().trim().equals("")) {
+			exception.addError("baseSalary", "Field can´t be empty");
+		}
+		obj.setBaseSalary(Utils.tryParseToDouble(txtBaseSalary.getText()));
+		
+		obj.setDepartment(comboBoxDepartment.getValue());
 
-		if (exception.getErrors().size() > 0) {
+		if (exception.getErrors().size() > 0) { //se tem algum erro, lança excessao, caso o contrario retorna o obj
 			throw exception;
 		}
 
@@ -192,12 +215,14 @@ public class SellerFormController implements Initializable {
 		comboBoxDepartment.setItems(obsList);
 	}
 
-	private void setErrorMessages(Map<String, String> errors) {
+	private void setErrorMessages(Map<String, String> errors) { //vai testar cada um dos possiveis erros, e ai vai setar o valor do lable correspondente
 		Set<String> fields = errors.keySet();
-
-		if (fields.contains("name")) {
-			labelErrorName.setText(errors.get("name"));
-		}
+		
+		labelErrorName.setText((fields.contains("name") ? errors.get("name") : "")); //operador ternario ?(se ela for verdadeira) :(se ela for falsa)
+		labelErrorEmail.setText((fields.contains("email") ? errors.get("email") : ""));
+		labelErrorBaseSalary.setText((fields.contains("baseSalary") ? errors.get("baseSalary") : ""));
+		labelErrorBirthDate.setText((fields.contains("birthDate") ? errors.get("birthDate") : ""));
+		
 	}
 
 	private void initializeComboBoxDepartment() {
